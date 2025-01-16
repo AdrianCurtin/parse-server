@@ -29,11 +29,11 @@ export class FilesController extends AdaptableController {
       filename = randomHexString(32) + '_' + filename;
     }
 
-    const location = await this.adapter.getFileLocation(config, filename);
-    await this.adapter.createFile(filename, data, contentType, options);
+    const defaultLocation = await this.adapter.getFileLocation(config, filename);
+    const createResult = await this.adapter.createFile(filename, data, contentType, options, config);
     return {
-      url: location,
-      name: filename,
+      url: createResult?.url || defaultLocation,
+      name: createResult?.name || filename,
     }
   }
 
