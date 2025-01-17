@@ -32,7 +32,7 @@ export class FilesAdapter {
    * @param {object} options - (Optional) options to be passed to file adapter (S3 File Adapter Only)
    * - tags: object containing key value pairs that will be stored with file
    * - metadata: object containing key value pairs that will be stored with file (https://docs.aws.amazon.com/AmazonS3/latest/user-guide/add-object-metadata.html)
-   * @discussion options are not supported by all file adapters. Check the your adapter's documentation for compatibility 
+   * @discussion options are not supported by all file adapters. Check the your adapter's documentation for compatibility
    * @param {Config} config -(Optional) server configuration
    * @discussion config is not supported by all file adapters. Check the your adapter's documentation for compatibility
    *
