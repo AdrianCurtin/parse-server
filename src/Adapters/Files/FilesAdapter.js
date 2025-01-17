@@ -30,13 +30,14 @@ export class FilesAdapter {
    * @param {string} contentType - the supposed contentType
    * @discussion the contentType can be undefined if the controller was not able to determine it
    * @param {object} options - (Optional) options to be passed to file adapter (S3 File Adapter Only)
+   * @param {Config} config -(Optional) server configuration
    * - tags: object containing key value pairs that will be stored with file
    * - metadata: object containing key value pairs that will be sotred with file (https://docs.aws.amazon.com/AmazonS3/latest/user-guide/add-object-metadata.html)
    * @discussion options are not supported by all file adapters. Check the your adapter's documentation for compatibility
    *
-   * @return {Promise} a promise that should fail if the storage didn't succeed
+   * @return {Promise<any>|Promise<{url?: string, name?: string}>} Either a plain promise that should fail if storage didn't succeed, or a promise resolving to an object containing url and/or an updated filename
    */
-  createFile(filename: string, data, contentType: string, options: Object): Promise {}
+  createFile(filename: string, data, contentType: string, options: Object, config: Config): Promise {}
 
   /** Responsible for deleting the specified file
    *
