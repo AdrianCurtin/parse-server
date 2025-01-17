@@ -36,7 +36,7 @@ export class FilesAdapter {
    * @param {Config} config -(Optional) server configuration
    * @discussion config is not supported by all file adapters. Check the your adapter's documentation for compatibility
    *
-   * @return {Promise<any>|Promise<{url?: string, name?: string, location?: string}>} Either a plain promise that should fail if storage didn't succeed, or a promise resolving to an object containing url and/or an updated filename and/or location (if relevant)
+   * @return {Promise<{url?: string, name?: string, location?: string}>|Promise<undefined>} Either a plain promise that should fail if storage didn't succeed, or a promise resolving to an object containing url and/or an updated filename and/or location (if relevant)
    */
   createFile(filename: string, data, contentType: string, options: Object, config: Config): Promise {}
 
