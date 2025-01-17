@@ -218,4 +218,111 @@ describe('FilesController', () => {
     expect(gridFSAdapter.validateFilename(fileName)).not.toBe(null);
     done();
   });
+
+  it('should return valid filename or url from createFile response when provided', async () => {
+    const config = Config.get(Parse.applicationId);
+    
+    // Test case 1: adapter returns new filename and url
+    const adapterWithReturn = {
+      createFile: () => {
+        return Promise.resolve({
+          name: 'newfilename.txt',
+          url: 'http://new.url/newfilename.txt'
+        });
+      },
+      getFileLocation: () => {
+        return Promise.resolve('http://default.url/file.txt');
+      },
+      validateFilename: () => null
+    };
+    
+    const controllerWithReturn = new FilesController(adapterWithReturn);
+    const result1 = await controllerWithReturn.createFile(
+      config,
+      'originalfile.txt',
+      'data',
+      'text/plain'
+    );
+    
+    expect(result1.name).toBe('newfilename.txt');
+    expect(result1.url).toBe('http://new.url/newfilename.txt');
+
+    // Test case 2: adapter returns nothing, falling back to default behavior
+    const adapterWithoutReturn = {
+      createFile: () => {
+        return Promise.resolve();
+      },
+      getFileLocation: (config, filename) => {
+        return Promise.resolve(`http://default.url/${filename}`);
+      },
+      validateFilename: () => null
+    };
+    
+    const controllerWithoutReturn = new FilesController(adapterWithoutReturn);
+    const result2 = await controllerWithoutReturn.createFile(
+      config,
+      'originalfile.txt',
+      'data',
+      'text/plain',
+      {},
+      { preserveFileName: true }  // To make filename predictable
+    );
+    
+    expect(result2.name).toBe('originalfile.txt');
+    expect(result2.url).toBe('http://default.url/originalfile.txt');
+
+    // Test case 3: adapter returns partial info (only url)
+    // This is a valid scenario, as the adapter may return a modified filename
+    // but may result in a mismatch between the filename and the resource URL
+    const adapterWithOnlyURL = {
+      createFile: () => {
+        return Promise.resolve({
+          url: 'http://new.url/partialfile.txt'
+        });
+      },
+      getFileLocation: () => {
+        return Promise.resolve('http://default.url/file.txt');
+      },
+      validateFilename: () => null
+    };
+    
+    const controllerWithPartial = new FilesController(adapterWithOnlyURL);
+    const result3 = await controllerWithPartial.createFile(
+      config,
+      'originalfile.txt',
+      'data',
+      'text/plain',
+      {},
+      { preserveFileName: true }  // To make filename predictable
+    );
+    
+    expect(result3.name).toBe('originalfile.txt');
+    expect(result3.url).toBe('http://new.url/partialfile.txt'); // Technically, the resource does not need to match the filename
+
+    // Test case 4: adapter returns only filename
+    const adapterWithOnlyFilename = {
+      createFile: () => {
+        return Promise.resolve({
+          name: 'newname.txt'
+        });
+      },
+      getFileLocation: (config, filename) => {
+        return Promise.resolve(`http://default.url/${filename}`);
+      },
+      validateFilename: () => null
+    };
+    
+    const controllerWithOnlyFilename = new FilesController(adapterWithOnlyFilename);
+    const result4 = await controllerWithOnlyFilename.createFile(
+      config,
+      'originalfile.txt',
+      'data',
+      'text/plain',
+      {},
+      { preserveFileName: true }
+    );
+    
+    expect(result4.name).toBe('newname.txt');
+    expect(result4.url).toBe('http://default.url/newname.txt');
+  });
 });
