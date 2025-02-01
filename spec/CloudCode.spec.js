@@ -3695,11 +3695,13 @@ describe('saveFile hooks', () => {
         foo: 'bar',
       },
     };
+    const config = Config.get('test');
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       newData,
       'text/plain',
-      newOptions
+      newOptions,
+      config
     );
   });
 
@@ -3727,11 +3729,13 @@ describe('saveFile hooks', () => {
         foo: 'bar',
       },
     };
+    const config = Config.get('test');
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       newData,
       newContentType,
-      newOptions
+      newOptions,
+      config
     );
     const expectedFileName = 'donald_duck.pdf';
     expect(file._name.indexOf(expectedFileName)).toBe(file._name.length - expectedFileName.length);
@@ -3757,11 +3761,13 @@ describe('saveFile hooks', () => {
       metadata: { foo: 'bar' },
       tags: { bar: 'foo' },
     };
+    const config = Config.get('test');
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       jasmine.any(Buffer),
       'text/plain',
-      options
+      options,
+      config
     );
   });
 
