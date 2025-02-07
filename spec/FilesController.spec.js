@@ -233,7 +233,8 @@ describe('FilesController', () => {
     adapterWithReturn.getFileLocation = () => {
       return Promise.resolve('http://default.url/file.txt');
     };
-    const controllerWithReturn = new FilesController(adapterWithReturn);
+    const controllerWithReturn = new FilesController(adapterWithReturn, null, { preserveFileName: true });
+    // preserveFileName is true to make filename behaviors predictable
     const result1 = await controllerWithReturn.createFile(
       config,
       'originalFile.txt',
@@ -252,14 +253,13 @@ describe('FilesController', () => {
       return Promise.resolve(`http://default.url/${filename}`);
     };
 
-    const controllerWithoutReturn = new FilesController(adapterWithoutReturn);
+    const controllerWithoutReturn = new FilesController(adapterWithoutReturn, null, { preserveFileName: true });
     const result2 = await controllerWithoutReturn.createFile(
       config,
       'originalFile.txt',
       'data',
       'text/plain',
-      {},
-      { preserveFileName: true }  // To make filename predictable
+      {}
     );
     
     expect(result2.name).toBe('originalFile.txt');
@@ -278,14 +278,13 @@ describe('FilesController', () => {
       return Promise.resolve('http://default.url/file.txt');
     };
     
-    const controllerWithPartial = new FilesController(adapterWithOnlyURL);
+    const controllerWithPartial = new FilesController(adapterWithOnlyURL, null, { preserveFileName: true });
     const result3 = await controllerWithPartial.createFile(
       config,
       'originalFile.txt',
       'data',
       'text/plain',
-      {},
-      { preserveFileName: true }  // To make filename predictable
+      {}
     );
     
     expect(result3.name).toBe('originalFile.txt');
@@ -302,14 +301,13 @@ describe('FilesController', () => {
       return Promise.resolve(`http://default.url/${filename}`);
     };
     
-    const controllerWithOnlyFilename = new FilesController(adapterWithOnlyFilename);
+    const controllerWithOnlyFilename = new FilesController(adapterWithOnlyFilename, null, { preserveFileName: true });
     const result4 = await controllerWithOnlyFilename.createFile(
       config,
       'originalFile.txt',
       'data',
       'text/plain',
-      {},
-      { preserveFileName: true }
+      {}
     );
     
     expect(result4.name).toBe('newname.txt');

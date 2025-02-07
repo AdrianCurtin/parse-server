@@ -33,7 +33,7 @@ export class FilesController extends AdaptableController {
     filename = createResult?.name || filename; // if createFile returns a new filename, use it
 
     const url = createResult?.url || await this.adapter.getFileLocation(config, filename); // if createFile returns a new url, use it otherwise get the url from the adapter
-    
+
     return {
       url: url,
       name: filename,
