@@ -3696,12 +3696,17 @@ describe('saveFile hooks', () => {
       },
     };
     const config = Config.get('test');
+    const expectedConfig = {
+      applicationId: config.applicationId,
+      mount: config.mount,
+      fileKey: config.fileKey
+    };
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       newData,
       'text/plain',
       newOptions,
-      config
+      expectedConfig
     );
   });
 
@@ -3730,12 +3735,17 @@ describe('saveFile hooks', () => {
       },
     };
     const config = Config.get('test');
+    const expectedConfig = {
+      applicationId: config.applicationId,
+      mount: config.mount,
+      fileKey: config.fileKey
+    };
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       newData,
       newContentType,
       newOptions,
-      config
+      expectedConfig
     );
     const expectedFileName = 'donald_duck.pdf';
     expect(file._name.indexOf(expectedFileName)).toBe(file._name.length - expectedFileName.length);
@@ -3762,12 +3772,17 @@ describe('saveFile hooks', () => {
       tags: { bar: 'foo' },
     };
     const config = Config.get('test');
+    const expectedConfig = {
+      applicationId: config.applicationId,
+      mount: config.mount,
+      fileKey: config.fileKey
+    };
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       jasmine.any(Buffer),
       'text/plain',
       options,
-      config
+      expectedConfig
     );
   });
 
