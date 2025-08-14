@@ -3696,11 +3696,14 @@ describe('saveFile hooks', () => {
       },
     };
     // Get the actual config values that will be used
+    const config = Config.get('test');
+
     const expectedConfig = {
-      applicationId: 'test',
-      mount: 'http://localhost:8378/1',
-      fileKey: 'test'
+      applicationId: config.applicationId,
+      mount: config.mount,
+      fileKey: config.fileKey
     };
+
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       newData,
@@ -3734,12 +3737,14 @@ describe('saveFile hooks', () => {
         foo: 'bar',
       },
     };
-    // Get the actual config values that will be used
+    const config = Config.get('test');
+
     const expectedConfig = {
-      applicationId: 'test',
-      mount: 'http://localhost:8378/1',
-      fileKey: 'test'
+      applicationId: config.applicationId,
+      mount: config.mount,
+      fileKey: config.fileKey
     };
+
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       newData,
@@ -3771,12 +3776,14 @@ describe('saveFile hooks', () => {
       metadata: { foo: 'bar' },
       tags: { bar: 'foo' },
     };
-    // Get the actual config values that will be used
+    const config = Config.get('test');
+
     const expectedConfig = {
-      applicationId: 'test',
-      mount: 'http://localhost:8378/1',
-      fileKey: 'test'
+      applicationId: config.applicationId,
+      mount: config.mount,
+      fileKey: config.fileKey
     };
+
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       jasmine.any(Buffer),
