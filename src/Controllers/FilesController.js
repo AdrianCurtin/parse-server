@@ -30,16 +30,16 @@ export class FilesController extends AdaptableController {
     }
 
     // Create a clean config object with only the properties needed by file adapters
-    const adapterConfig = {
+    const basicServerConfig = {
       applicationId: config.applicationId,
       mount: config.mount,
       fileKey: config.fileKey
     };
 
-    const createResult = await this.adapter.createFile(filename, data, contentType, options, adapterConfig);
+    const createResult = await this.adapter.createFile(filename, data, contentType, options, basicServerConfig);
     filename = createResult?.name || filename; // if createFile returns a new filename, use it
 
-    const url = createResult?.url || await this.adapter.getFileLocation(adapterConfig, filename); // if createFile returns a new url, use it otherwise get the url from the adapter
+    const url = createResult?.url || await this.adapter.getFileLocation(basicServerConfig, filename); // if createFile returns a new url, use it otherwise get the url from the adapter
 
     return {
       url: url,
