@@ -225,11 +225,11 @@ describe('FilesController', () => {
     adapterWithReturn.createFile = () => {
       return Promise.resolve({
         name: 'newFilename.txt',
-        url: 'http://new.url/newFilename.txt'
+        url: 'http://example.com/newFilename.txt'
       });
     };
     adapterWithReturn.getFileLocation = () => {
-      return Promise.resolve('http://default.url/file.txt');
+      return Promise.resolve('http://example.com/file.txt');
     };
     const controllerWithReturn = new FilesController(adapterWithReturn, null, { preserveFileName: true });
 
@@ -241,7 +241,7 @@ describe('FilesController', () => {
     );
 
     expect(result.name).toBe('newFilename.txt');
-    expect(result.url).toBe('http://new.url/newFilename.txt');
+    expect(result.url).toBe('http://example.com/newFilename.txt');
   });
 
   it('should use original filename and generate url when adapter returns nothing', async () => {
@@ -251,7 +251,7 @@ describe('FilesController', () => {
       return Promise.resolve();
     };
     adapterWithoutReturn.getFileLocation = (config, filename) => {
-      return Promise.resolve(`http://default.url/${filename}`);
+      return Promise.resolve(`http://example.com/${filename}`);
     };
 
     const controllerWithoutReturn = new FilesController(adapterWithoutReturn, null, { preserveFileName: true });
@@ -264,7 +264,7 @@ describe('FilesController', () => {
     );
 
     expect(result.name).toBe('originalFile.txt');
-    expect(result.url).toBe('http://default.url/originalFile.txt');
+    expect(result.url).toBe('http://example.com/originalFile.txt');
   });
 
   it('should use original filename when adapter returns only url', async () => {
@@ -272,11 +272,11 @@ describe('FilesController', () => {
     const adapterWithOnlyURL = { ...mockAdapter };
     adapterWithOnlyURL.createFile = () => {
       return Promise.resolve({
-        url: 'http://new.url/partialFile.txt'
+        url: 'http://example.com/partialFile.txt'
       });
     };
     adapterWithOnlyURL.getFileLocation = () => {
-      return Promise.resolve('http://default.url/file.txt');
+      return Promise.resolve('http://example.com/file.txt');
     };
 
     const controllerWithPartial = new FilesController(adapterWithOnlyURL, null, { preserveFileName: true });
@@ -289,7 +289,7 @@ describe('FilesController', () => {
     );
 
     expect(result.name).toBe('originalFile.txt');
-    expect(result.url).toBe('http://new.url/partialFile.txt');
+    expect(result.url).toBe('http://example.com/partialFile.txt');
   });
 
   it('should use adapter filename and generate url when adapter returns only filename', async () => {
@@ -301,7 +301,7 @@ describe('FilesController', () => {
       });
     };
     adapterWithOnlyFilename.getFileLocation = (config, filename) => {
-      return Promise.resolve(`http://default.url/${filename}`);
+      return Promise.resolve(`http://example.com/${filename}`);
     };
 
     const controllerWithOnlyFilename = new FilesController(adapterWithOnlyFilename, null, { preserveFileName: true });
@@ -314,6 +314,6 @@ describe('FilesController', () => {
     );
 
     expect(result.name).toBe('newname.txt');
-    expect(result.url).toBe('http://default.url/newname.txt');
+    expect(result.url).toBe('http://example.com/newname.txt');
   });
 });
