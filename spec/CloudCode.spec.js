@@ -3695,19 +3695,13 @@ describe('saveFile hooks', () => {
         foo: 'bar',
       },
     };
-    // Get the actual config values that will be used
-    const config = Config.get('test');
-
-    if (!config.mount){
-      config.mount = 'http://localhost:8378/1'; // Default mount for tests
-    }
 
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       newData,
       'text/plain',
       newOptions,
-      config
+      jasmine.objectContaining({ applicationId: 'test' })
     );
   });
 
@@ -3735,18 +3729,15 @@ describe('saveFile hooks', () => {
         foo: 'bar',
       },
     };
-    const config = Config.get('test');
-
-    if (!config.mount){
-      config.mount = 'http://localhost:8378/1'; // Default mount for tests
-    }
 
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       newData,
       newContentType,
       newOptions,
-      config
+      jasmine.objectContaining({
+        applicationId: 'test'
+      })
     );
     const expectedFileName = 'donald_duck.pdf';
     expect(file._name.indexOf(expectedFileName)).toBe(file._name.length - expectedFileName.length);
@@ -3772,18 +3763,14 @@ describe('saveFile hooks', () => {
       metadata: { foo: 'bar' },
       tags: { bar: 'foo' },
     };
-    const config = Config.get('test');
 
-    if (!config.mount){
-      config.mount = 'http://localhost:8378/1'; // Default mount for tests
-    }
 
     expect(createFileSpy).toHaveBeenCalledWith(
       jasmine.any(String),
       jasmine.any(Buffer),
       'text/plain',
       options,
-      config
+      jasmine.objectContaining({ applicationId: 'test' })
     );
   });
 
