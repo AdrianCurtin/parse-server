@@ -575,6 +575,45 @@ describe('Hooks', () => {
       });
   });
 
+  for (const [type, value] of [
+    ['true', true],
+    ['a string', 'invalid'],
+    ['a number', 1],
+    ['an array', []],
+  ]) {
+    it(`should reject a save when beforeSave webhook responds with ${type}`, async () => {
+      const path = `/BeforeSaveInvalid${type.replace(/\W/g, '')}`;
+      app.post(path, (req, res) => {
+        res.json({ success: value });
+      });
+      await Parse.Hooks.createTrigger('SomeRandomObject', 'beforeSave', hookServerURL + path);
+      await expectAsync(
+        new Parse.Object('SomeRandomObject').save({ foo: 'bar' })
+      ).toBeRejectedWith(
+        new Parse.Error(
+          Parse.Error.SCRIPT_FAILED,
+          'beforeSave webhook must respond with an object.'
+        )
+      );
+      const results = await new Parse.Query('SomeRandomObject').find({ useMasterKey: true });
+      expect(results.length).toBe(0);
+    });
+  }
+
+  it('should save the original object when beforeSave webhook responds with null', async () => {
+    app.post('/BeforeSaveNull', (req, res) => {
+      res.json({ success: null });
+    });
+    await Parse.Hooks.createTrigger(
+      'SomeRandomObject',
+      'beforeSave',
+      hookServerURL + '/BeforeSaveNull'
+    );
+    const obj = await new Parse.Object('SomeRandomObject').save({ foo: 'bar' });
+    await obj.fetch({ useMasterKey: true });
+    expect(obj.get('foo')).toBe('bar');
+  });
+
   it_id('52e3152b-5514-4418-9e76-1f394368b8fb')(it)('beforeSave hooks should correctly handle responses containing entire object', done => {
     app.post('/BeforeSaveSome2', function (req, res) {
       const object = Parse.Object.fromJSON(req.body.object);

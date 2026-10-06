@@ -241,11 +241,18 @@ function wrapToHTTPRequest(hook, key) {
       if (err) {
         throw err;
       } else if (hook.triggerName === 'beforeSave') {
-        if (typeof result === 'object') {
-          delete result.createdAt;
-          delete result.updatedAt;
-          delete result.className;
+        if (result === null || result === undefined) {
+          return { object: undefined };
         }
+        if (typeof result !== 'object' || Array.isArray(result)) {
+          throw new Parse.Error(
+            Parse.Error.SCRIPT_FAILED,
+            'beforeSave webhook must respond with an object.'
+          );
+        }
+        delete result.createdAt;
+        delete result.updatedAt;
+        delete result.className;
         return { object: result };
       } else {
         return result;
